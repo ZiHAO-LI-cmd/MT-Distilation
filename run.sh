@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python train_translation_model.py \
+python distill.py \
   --learning_rate 0.001 \
   --batch_size 4 \
   --num_epochs 3 \
