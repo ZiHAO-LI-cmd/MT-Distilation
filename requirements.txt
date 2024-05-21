@@ -2,3 +2,5 @@ datasets==2.19.1
 torch==2.3.0
 tqdm==4.66.4
 transformers==4.40.2
+wandb==0.17.0
+sentencepiece==0.2.0

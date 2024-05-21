@@ -1,6 +1,6 @@
 import os
 import torch
-from transformers import MarianMTModel, MarianTokenizer
+from transformers import MarianMTModel, MarianTokenizer, MarianConfig
 from datasets import load_dataset
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -204,7 +204,16 @@ val_dataset = TranslationDataset(
     val_src_sentences, val_tgt_sentences, tgt_lang, tokenizer
 )
 
-student_config = teacher_model.config
+# Build studnet model
+teacher_config = MarianConfig.from_pretrained(model_name)
+config_dict = teacher_config.to_dict()
+config_dict['num_hidden_layers'] = 3
+config_dict['d_model'] = 512 
+config_dict['decoder_attention_heads'] = 8
+config_dict['encoder_attention_heads'] = 8
+config_dict['decoder_ffn_dim'] = 2048
+config_dict['encoder_ffn_dim'] = 2048
+student_config = MarianConfig(**config_dict)
 student_model = MarianMTModel(student_config)
 student_model.to(device)
 
