@@ -8,6 +8,8 @@ from torch.nn.functional import log_softmax, softmax
 from torch.utils.data import Dataset, DataLoader
 import wandb
 import argparse
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+
 
 
 class TranslationDataset(Dataset):
@@ -221,6 +223,7 @@ student_model.to(device)
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
 optimizer = torch.optim.AdamW(student_model.parameters(), lr=learning_rate)
+scheduler = ReduceLROnPlateau(optimizer, 'min', patience=3, factor=0.1, verbose=True)
 
 
 run = wandb.init(
@@ -270,6 +273,8 @@ for epoch in range(num_epochs):
     avg_train_loss = total_train_loss / len(train_loader)
     avg_val_loss = validate(student_model, val_loader, device)
     wandb.log({"Training Loss": avg_train_loss, "Validation Loss": avg_val_loss})
+    
+    scheduler.step(avg_val_loss)    # Update the scheduler based on the validation loss
 
     # Keep best checkpoint
     if avg_val_loss < best_loss:
@@ -282,3 +287,4 @@ model_save_dir = os.path.join(model_save_path, "last.pt")
 student_model.save_pretrained(model_save_dir)
 print(f"Saved last model at {model_save_dir}")
 wandb.finish()
+os.system("/usr/bin/shutdown")
