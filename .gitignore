@@ -2,3 +2,5 @@
 /models
 /wandb
 /log
+*.out
+*.ipynb

@@ -3,11 +3,11 @@
 python distill.py \
   --learning_rate 0.001 \
   --batch_size 8 \
-  --num_epochs 1 \
+  --num_epochs 5 \
   --temperature 5.0 \
   --alpha 0.5 \
-  --src_file_path "./data/en-uk/sampled.en" \
-  --tgt_file_path "./data/en-uk/sampled.uk" \
+  --src_file_path "./data/en-uk/sampled.1m.en" \
+  --tgt_file_path "./data/en-uk/sampled.1m.uk" \
   --tgt_lang "ukr" \
   --model_name "Helsinki-NLP/opus-mt-tc-big-en-zle" \
   --model_save_path "./models" \
