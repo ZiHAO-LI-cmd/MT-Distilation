@@ -40,12 +40,12 @@ def preprocess_function(examples):
         targets = examples["tgt"]
 
         model_inputs = tokenizer(
-            inputs, max_length=512, truncation=True, padding="max_length"
+            inputs, max_length=256, truncation=True, padding="max_length"
         )
 
         with tokenizer.as_target_tokenizer():
             labels = tokenizer(
-                targets, max_length=512, truncation=True, padding="max_length"
+                targets, max_length=256, truncation=True, padding="max_length"
             )
 
         model_inputs["labels"] = labels["input_ids"]
@@ -86,7 +86,6 @@ parser.add_argument(
     required=True,
     help="Target file path for training data.",
 )
-parser.add_argument("--tgt_lang", type=str, required=True, help="Target language code.")
 parser.add_argument("--model_name", type=str, required=True, help="Teacher model name.")
 parser.add_argument(
     "--model_save_path",
@@ -113,7 +112,6 @@ batch_size = args.batch_size
 num_epochs = args.num_epochs
 src_file_path = args.src_file_path
 tgt_file_path = args.tgt_file_path
-tgt_lang = args.tgt_lang
 model_save_path = args.model_save_path
 model_name = args.model_name
 
@@ -133,7 +131,7 @@ eval_dataset = train_test_split["test"]
 teacher_config = MarianConfig.from_pretrained(model_name)
 config_dict = teacher_config.to_dict()
 config_dict["num_hidden_layers"] = 3
-config_dict["d_model"] = 512
+config_dict["d_model"] = 256
 config_dict["decoder_attention_heads"] = 8
 config_dict["encoder_attention_heads"] = 8
 config_dict["decoder_ffn_dim"] = 2048
